@@ -6,12 +6,12 @@ type File struct {
 	*elf.File
 }
 
-func NewElfFile(f *elf.File) *File {
-	return &File{f}
-}
-
-func (f *File) Close() error {
-	return f.Close()
+func NewElfFile(name string) (*File, error) {
+	f, err := elf.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	return &File{f}, nil
 }
 
 func (f *File) FindSymbolAddress(symbol string) (uint64, error) {
