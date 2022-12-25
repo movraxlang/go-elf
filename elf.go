@@ -3,15 +3,19 @@ package elf
 import "debug/elf"
 
 type File struct {
-	f *elf.File
+	*elf.File
 }
 
 func NewElfFile(f *elf.File) *File {
-	return &File{f: f}
+	return &File{f}
+}
+
+func (f *File) Close() error {
+	return f.Close()
 }
 
 func (f *File) FindSymbolAddress(symbol string) (uint64, error) {
-	syms, err := f.f.Symbols()
+	syms, err := f.Symbols()
 	if err != nil {
 		return 0, err
 	}
