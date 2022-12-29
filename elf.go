@@ -1,17 +1,26 @@
 package elf
 
-import "debug/elf"
+import (
+	"debug/elf"
+	"io"
+	"os"
+)
 
 type File struct {
 	*elf.File
+	io.ReaderAt
 }
 
-func NewElfFile(name string) (*File, error) {
-	f, err := elf.Open(name)
+func NewFile(name string) (*File, error) {
+	file, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
-	return &File{f}, nil
+	f, err := elf.NewFile(file)
+	if err != nil {
+		return nil, err
+	}
+	return &File{f, file}, nil
 }
 
 func (f *File) FindSymbolAddress(symbol string) (uint64, error) {
